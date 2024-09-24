@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { getTasks, updateTask, deleteTask, searchTasks, Task } from '../services/api';
 import TaskForm from '../components/TaskForm';
+import SearchBar from '../components/SearchBar'; // SearchBarコンポーネントをインポート
 
 const TaskPage: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [filter, setFilter] = useState('');
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -49,9 +49,9 @@ const TaskPage: React.FC = () => {
     }
   };
 
-  const handleSearch = async () => {
+  const handleSearch = async (query: string) => {
     try {
-      const searchedTasks = await searchTasks({ query: filter });
+      const searchedTasks = await searchTasks({ query });
       setTasks(searchedTasks);
     } catch (error) {
       console.error('Error searching tasks:', error);
@@ -63,21 +63,7 @@ const TaskPage: React.FC = () => {
       <h2 className="text-2xl font-bold mb-4">Your Tasks</h2>
       {error && <p className="text-red-500 mb-4">{error}</p>}
       <TaskForm onTaskCreated={handleTaskCreated} />
-      <div className="mb-4">
-        <input
-          type="text"
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          placeholder="Search tasks"
-          className="w-full px-3 py-2 border rounded"
-        />
-        <button
-          onClick={handleSearch}
-          className="mt-2 bg-blue-500 text-white px-4 py-2 rounded"
-        >
-          Search
-        </button>
-      </div>
+      <SearchBar onSearch={handleSearch} /> {/* SearchBarコンポーネントを使用 */}
       {tasks.map((task) => (
         <div key={task.id} className="bg-white p-4 mb-4 rounded shadow">
           {editingTask?.id === task.id ? (
