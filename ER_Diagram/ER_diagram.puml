@@ -1,0 +1,57 @@
+@startuml
+!define RECTANGLE class
+
+RECTANGLE User {
+  Int id
+  String email
+  String? password
+  String? oauthProvider
+  String? oauthProviderId
+  DateTime createdAt
+  DateTime updatedAt
+}
+
+RECTANGLE Task {
+  Int id
+  String title
+  String? description
+  Priority priority
+  Status status
+  DateTime? dueDate
+  DateTime createdAt
+  DateTime updatedAt
+  Int userId
+}
+
+RECTANGLE Tag {
+  Int id
+  String name
+  DateTime createdAt
+  DateTime updatedAt
+}
+
+RECTANGLE TaskTag {
+  Int taskId
+  Int tagId
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum Status {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+
+User "1" -- "0..*" Task : tasks
+Task "1" -- "0..*" TaskTag : tags
+Tag "1" -- "0..*" TaskTag : tasks
+TaskTag "0..*" -- "1" Task : task
+TaskTag "0..*" -- "1" Tag : tag
+
+@enduml
